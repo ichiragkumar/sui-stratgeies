@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Check, AlertTriangle, Info, Play } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import SocialShare from './SocialShare';
 
 interface StrategyCardProps {
   strategy: Strategy;
@@ -101,13 +102,14 @@ const StrategyCard: React.FC<StrategyCardProps> = ({ strategy, onExecute, invest
         </div>
       </CardContent>
       
-      <CardFooter>
+      <CardFooter className="flex justify-between">
         <Button 
-          className="w-full gradient-bg" 
+          className="flex-1 gradient-bg mr-2" 
           onClick={() => onExecute(strategy)}
         >
           <Play className="h-4 w-4 mr-2" /> Execute Strategy
         </Button>
+        <SocialShare strategy={strategy} investmentAmount={investmentAmount} />
       </CardFooter>
     </Card>
   );

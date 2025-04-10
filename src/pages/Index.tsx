@@ -2,25 +2,41 @@
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import StrategyForm from '@/components/StrategyForm';
+import NaturalLanguageInput from '@/components/NaturalLanguageInput';
 import StrategyCard from '@/components/StrategyCard';
 import PortfolioDashboard from '@/components/PortfolioDashboard';
+import UserProfile from '@/components/UserProfile';
 import { RiskLevel } from '@/data/protocols';
 import { Strategy, generateStrategies, StrategyRequest } from '@/utils/strategyGenerator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { WalletData } from '@/components/WalletConnect';
+import { Bot, Brain, Sparkles, Fingerprint } from 'lucide-react';
 
 const Index = () => {
   const [recommendedStrategies, setRecommendedStrategies] = useState<Strategy[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [investmentAmount, setInvestmentAmount] = useState<number>(0);
   const [activeStrategies, setActiveStrategies] = useState<any[]>([]);
+  const [walletData, setWalletData] = useState<WalletData | null>(null);
+  const [usingNaturalLanguage, setUsingNaturalLanguage] = useState<boolean>(false);
   const { toast } = useToast();
 
   const handleStrategySubmit = (amount: number, riskLevel: RiskLevel) => {
     setIsLoading(true);
     setInvestmentAmount(amount);
     
-    // Simulate API call
+    // Simulate API call to Eliza OS with the Sui plugin
     setTimeout(() => {
       const request: StrategyRequest = {
         amount,
@@ -30,10 +46,25 @@ const Index = () => {
       const strategies = generateStrategies(request);
       setRecommendedStrategies(strategies);
       setIsLoading(false);
+      
+      toast({
+        title: "Strategies Generated",
+        description: `Found ${strategies.length} strategies matching your criteria.`,
+      });
     }, 1500);
   };
 
   const handleExecuteStrategy = (strategy: Strategy) => {
+    // Only allow execution if wallet is connected
+    if (!walletData?.connected) {
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet to execute strategies.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     // Simulate execution of strategy
     toast({
       title: "Strategy Execution Initiated",
@@ -66,15 +97,28 @@ const Index = () => {
     }, 2000);
   };
 
+  const handleWalletConnect = (data: WalletData) => {
+    setWalletData(data);
+    
+    if (data.connected) {
+      toast({
+        title: "Wallet Connected",
+        description: `Successfully connected to ${data.chain} wallet`,
+      });
+    } else {
+      setWalletData(null);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+      <Header onWalletConnect={handleWalletConnect} walletData={walletData} />
       
-      <main className="container mx-auto flex-1 py-8 px-4">
+      <main className="container mx-auto flex-1 py-6 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold tracking-tighter gradient-text">AI-Powered DeFi Strategy Agent</h1>
-            <p className="text-xl text-muted-foreground">Personalized yield strategies for the Sui blockchain</p>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter gradient-text">AI-Powered DeFi Strategy Agent</h1>
+            <p className="text-lg text-muted-foreground">Personalized yield strategies for the Sui blockchain</p>
           </div>
           
           <Tabs defaultValue="generate" className="w-full">
@@ -84,13 +128,64 @@ const Index = () => {
             </TabsList>
             
             <TabsContent value="generate" className="space-y-8">
-              <div className="my-8">
-                <StrategyForm onSubmit={handleStrategySubmit} isLoading={isLoading} />
-              </div>
+              <Card>
+                <CardHeader className="px-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Strategy Generator</CardTitle>
+                      <CardDescription>Create personalized investment strategies based on your preferences</CardDescription>
+                    </div>
+                    
+                    <div className="flex items-center gap-1">
+                      <TabsList className="grid grid-cols-2 h-8">
+                        <TabsTrigger 
+                          value="simple" 
+                          onClick={() => setUsingNaturalLanguage(false)}
+                          className={!usingNaturalLanguage ? "bg-primary text-primary-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" : ""}
+                        >
+                          <Fingerprint className="h-4 w-4 mr-2" />
+                          <span className="hidden sm:inline">Simple</span>
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="ai" 
+                          onClick={() => setUsingNaturalLanguage(true)}
+                          className={usingNaturalLanguage ? "bg-primary text-primary-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" : ""}
+                        >
+                          <Brain className="h-4 w-4 mr-2" />
+                          <span className="hidden sm:inline">AI</span>
+                        </TabsTrigger>
+                      </TabsList>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="px-6 pb-6">
+                  {usingNaturalLanguage ? (
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-1.5 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <Bot className="h-5 w-5" />
+                        </div>
+                        <div className="space-y-1.5 flex-1">
+                          <p className="font-medium text-sm mb-1">Eliza OS Agent</p>
+                          <p className="text-muted-foreground text-sm">
+                            I'm your AI-powered DeFi strategy agent. Tell me what you're looking for, and I'll generate personalized yield strategies for you.
+                          </p>
+                        </div>
+                      </div>
+                      <NaturalLanguageInput onSubmit={handleStrategySubmit} isLoading={isLoading} />
+                    </div>
+                  ) : (
+                    <StrategyForm onSubmit={handleStrategySubmit} isLoading={isLoading} />
+                  )}
+                </CardContent>
+              </Card>
               
               {recommendedStrategies.length > 0 && (
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold">Recommended Strategies</h2>
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <h2 className="text-2xl font-semibold">Recommended Strategies</h2>
+                  </div>
                   <p className="text-muted-foreground">
                     Based on your risk profile and investment amount, here are personalized strategy recommendations:
                   </p>
@@ -109,18 +204,26 @@ const Index = () => {
               )}
             </TabsContent>
             
-            <TabsContent value="portfolio">
-              <div className="my-8">
-                <PortfolioDashboard activeStrategies={activeStrategies} />
-              </div>
+            <TabsContent value="portfolio" className="space-y-6">
+              {walletData?.connected && (
+                <UserProfile walletData={walletData} />
+              )}
+              <PortfolioDashboard 
+                activeStrategies={activeStrategies} 
+                walletConnected={Boolean(walletData?.connected)}
+              />
             </TabsContent>
           </Tabs>
         </div>
       </main>
       
-      <footer className="border-t py-4">
+      <footer className="border-t py-4 mt-8">
         <div className="container mx-auto text-center text-sm text-muted-foreground">
-          <p>Powered by Eliza OS on the Sui blockchain</p>
+          <p className="flex items-center justify-center gap-1">
+            <span>Powered by</span> 
+            <span className="gradient-text font-medium">Eliza OS</span>
+            <span>on the Sui blockchain</span>
+          </p>
         </div>
       </footer>
     </div>

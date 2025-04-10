@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { RiskLevel } from '@/data/protocols';
 import { Brain } from 'lucide-react';
+import { validateAmount } from '@/utils/strategyGenerator';
 
 interface StrategyFormProps {
   onSubmit: (amount: number, riskLevel: RiskLevel) => void;
@@ -23,10 +24,21 @@ const StrategyForm: React.FC<StrategyFormProps> = ({ onSubmit, isLoading }) => {
   const [amount, setAmount] = useState<number>(50);
   const [riskLevel, setRiskLevel] = useState<RiskLevel>('moderate');
   const [inputValue, setInputValue] = useState<string>("50");
+  const [error, setError] = useState<string | null>(null);
+  const [touched, setTouched] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (touched) {
+      const validationError = validateAmount(inputValue);
+      setError(validationError);
+    }
+  }, [inputValue, touched]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+    setTouched(true);
+    
     const numValue = Number(value);
     if (!isNaN(numValue) && numValue > 0) {
       setAmount(numValue);
@@ -37,6 +49,7 @@ const StrategyForm: React.FC<StrategyFormProps> = ({ onSubmit, isLoading }) => {
     const newAmount = value[0];
     setAmount(newAmount);
     setInputValue(newAmount.toString());
+    setTouched(true);
   };
 
   const handleRiskChange = (value: string) => {
@@ -45,7 +58,13 @@ const StrategyForm: React.FC<StrategyFormProps> = ({ onSubmit, isLoading }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(amount, riskLevel);
+    
+    if (!error && amount > 0) {
+      onSubmit(amount, riskLevel);
+    } else {
+      setTouched(true);
+      setError(validateAmount(inputValue));
+    }
   };
 
   return (
@@ -55,12 +74,18 @@ const StrategyForm: React.FC<StrategyFormProps> = ({ onSubmit, isLoading }) => {
           <div className="space-y-2">
             <label className="text-sm font-medium">Investment Amount (SUI)</label>
             <div className="flex items-center space-x-4">
-              <Input 
-                type="text" 
-                value={inputValue} 
-                onChange={handleInputChange} 
-                className="max-w-[120px]" 
-              />
+              <div className="relative">
+                <Input 
+                  type="text" 
+                  value={inputValue} 
+                  onChange={handleInputChange} 
+                  className={`max-w-[120px] ${error ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                  onBlur={() => setTouched(true)}
+                />
+                {error && (
+                  <p className="absolute text-red-500 text-xs mt-0.5">{error}</p>
+                )}
+              </div>
               <div className="flex-1">
                 <Slider 
                   value={[amount]} 
@@ -69,6 +94,7 @@ const StrategyForm: React.FC<StrategyFormProps> = ({ onSubmit, isLoading }) => {
                   step={1} 
                   onValueChange={handleSliderChange}
                   className="py-2"
+                  disabled={isLoading || Boolean(error)}
                 />
                 <div className="flex justify-between mt-1 text-xs text-muted-foreground">
                   <span>1 SUI</span>
@@ -102,7 +128,7 @@ const StrategyForm: React.FC<StrategyFormProps> = ({ onSubmit, isLoading }) => {
             <Button 
               type="submit" 
               className="gradient-bg w-full" 
-              disabled={isLoading || amount <= 0}
+              disabled={isLoading || Boolean(error) || amount <= 0}
             >
               {isLoading ? (
                 <span className="flex items-center space-x-2">
