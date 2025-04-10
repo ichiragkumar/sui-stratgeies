@@ -1,27 +1,21 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import StrategyForm from '@/components/StrategyForm';
 import NaturalLanguageInput from '@/components/NaturalLanguageInput';
 import StrategyCard from '@/components/StrategyCard';
 import PortfolioDashboard from '@/components/PortfolioDashboard';
 import UserProfile from '@/components/UserProfile';
+import EmailSubscribeCard from '@/components/EmailSubscribeCard';
 import { RiskLevel } from '@/data/protocols';
 import { Strategy, generateStrategies, StrategyRequest } from '@/utils/strategyGenerator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { WalletData } from '@/components/WalletConnect';
-import { Bot, Brain, Sparkles, Fingerprint } from 'lucide-react';
+import { Bot, Brain, Sparkles, Fingerprint, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const [recommendedStrategies, setRecommendedStrategies] = useState<Strategy[]>([]);
@@ -128,57 +122,61 @@ const Index = () => {
             </TabsList>
             
             <TabsContent value="generate" className="space-y-8">
-              <Card>
-                <CardHeader className="px-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Strategy Generator</CardTitle>
-                      <CardDescription>Create personalized investment strategies based on your preferences</CardDescription>
-                    </div>
-                    
-                    <div className="flex items-center gap-1">
-                      <TabsList className="grid grid-cols-2 h-8">
-                        <TabsTrigger 
-                          value="simple" 
-                          onClick={() => setUsingNaturalLanguage(false)}
-                          className={!usingNaturalLanguage ? "bg-primary text-primary-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" : ""}
-                        >
-                          <Fingerprint className="h-4 w-4 mr-2" />
-                          <span className="hidden sm:inline">Simple</span>
-                        </TabsTrigger>
-                        <TabsTrigger 
-                          value="ai" 
-                          onClick={() => setUsingNaturalLanguage(true)}
-                          className={usingNaturalLanguage ? "bg-primary text-primary-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" : ""}
-                        >
-                          <Brain className="h-4 w-4 mr-2" />
-                          <span className="hidden sm:inline">AI</span>
-                        </TabsTrigger>
-                      </TabsList>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="px-6 pb-6">
-                  {usingNaturalLanguage ? (
-                    <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <div className="mt-1.5 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                          <Bot className="h-5 w-5" />
-                        </div>
-                        <div className="space-y-1.5 flex-1">
-                          <p className="font-medium text-sm mb-1">Eliza OS Agent</p>
-                          <p className="text-muted-foreground text-sm">
-                            I'm your AI-powered DeFi strategy agent. Tell me what you're looking for, and I'll generate personalized yield strategies for you.
-                          </p>
-                        </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="md:col-span-2">
+                  <CardHeader className="px-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Strategy Generator</CardTitle>
+                        <CardDescription>Create personalized investment strategies based on your preferences</CardDescription>
                       </div>
-                      <NaturalLanguageInput onSubmit={handleStrategySubmit} isLoading={isLoading} />
+                      
+                      <div className="flex items-center gap-1">
+                        <TabsList className="grid grid-cols-2 h-8">
+                          <TabsTrigger 
+                            value="simple" 
+                            onClick={() => setUsingNaturalLanguage(false)}
+                            className={!usingNaturalLanguage ? "bg-primary text-primary-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" : ""}
+                          >
+                            <Fingerprint className="h-4 w-4 mr-2" />
+                            <span className="hidden sm:inline">Simple</span>
+                          </TabsTrigger>
+                          <TabsTrigger 
+                            value="ai" 
+                            onClick={() => setUsingNaturalLanguage(true)}
+                            className={usingNaturalLanguage ? "bg-primary text-primary-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground" : ""}
+                          >
+                            <Brain className="h-4 w-4 mr-2" />
+                            <span className="hidden sm:inline">AI</span>
+                          </TabsTrigger>
+                        </TabsList>
+                      </div>
                     </div>
-                  ) : (
-                    <StrategyForm onSubmit={handleStrategySubmit} isLoading={isLoading} />
-                  )}
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent className="px-6 pb-6">
+                    {usingNaturalLanguage ? (
+                      <div className="space-y-4">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1.5 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <Bot className="h-5 w-5" />
+                          </div>
+                          <div className="space-y-1.5 flex-1">
+                            <p className="font-medium text-sm mb-1">Eliza OS Agent</p>
+                            <p className="text-muted-foreground text-sm">
+                              I'm your AI-powered DeFi strategy agent. Tell me what you're looking for, and I'll generate personalized yield strategies for you.
+                            </p>
+                          </div>
+                        </div>
+                        <NaturalLanguageInput onSubmit={handleStrategySubmit} isLoading={isLoading} />
+                      </div>
+                    ) : (
+                      <StrategyForm onSubmit={handleStrategySubmit} isLoading={isLoading} />
+                    )}
+                  </CardContent>
+                </Card>
+                
+                <EmailSubscribeCard />
+              </div>
               
               {recommendedStrategies.length > 0 && (
                 <div className="space-y-4">
@@ -199,6 +197,14 @@ const Index = () => {
                         investmentAmount={investmentAmount}
                       />
                     ))}
+                  </div>
+                  
+                  <div className="text-center mt-6">
+                    <Button asChild>
+                      <Link to="/strategies" className="flex items-center">
+                        View Community Strategies <ArrowRight className="ml-1.5 h-4 w-4" />
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               )}

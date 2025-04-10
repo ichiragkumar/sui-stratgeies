@@ -57,6 +57,7 @@ const NaturalLanguageInput: React.FC<NaturalLanguageInputProps> = ({ onSubmit, i
     
     try {
       const { amount, riskLevel } = parseInput(inputValue);
+      console.log("Parsed input:", { amount, riskLevel });
       onSubmit(amount, riskLevel);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to process your request.");
