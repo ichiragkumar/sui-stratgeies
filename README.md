@@ -1,73 +1,53 @@
-# Welcome to your Lovable project
 
-## Project info
+# DeFi Strategy Agent - v1+
 
-**URL**: https://lovable.dev/projects/8caea8e8-52f7-45be-b056-02453c34d455
+Built with ❤️ using [Lovable](https://lovable.dev)
 
-## How can I edit this code?
+## 🚀 Introduction
 
-There are several ways of editing your application.
+An AI-powered DeFi strategy agent for the Sui blockchain that helps users research, execute and track optimized yield strategies based on their risk tolerance and investment amount.
 
-**Use Lovable**
+## ✅ Key Features (Completed)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8caea8e8-52f7-45be-b056-02453c34d455) and start prompting.
+- **🔐 Wallet Connection**: Connect to Sui, EVM, and Solana wallets
+- **🧠 Strategy Engine**: AI-based strategy recommendations based on:
+  - Current market conditions
+  - Protocol TVL and security history
+  - Historical yields
+  - User's risk profile
+- **🚀 Automated Execution**: One-click execution of complex DeFi strategies
+- **📊 Portfolio Dashboard**: Real-time performance tracking with APY calculations
+- **🌓 Theming**: Sleek UI with smooth dark/light theme transitions
+- **🔄 Social Sharing**: Share strategies on Twitter, Telegram, Warpcast, WhatsApp, LinkedIn, Instagram, and TikTok
+- **🔑 Authentication**: Secure sign-in functionality
+- **💰 DeFi Lending Page**: Dedicated page for DeFi lending options
+- **📈 Live Strategies Page**: View community strategies with performance metrics and sorting options
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🔜 Coming in Next Release
 
-**Use your preferred IDE**
+- Refactor `Index.tsx` and `WalletConnect.tsx` for better code organization
+- Fix build error in `LiveStrategiesPage.tsx` (missing `allocationPercentage` property)
+- Implement comprehensive error handling and fallback mechanisms
+- Add more detailed analytics for strategy performance
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🔧 Technical Specifications
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Built on Sui blockchain utilizing the Eliza OS framework
+- Integrated with the Eliza OS Sui plugin (https://github.com/elizaos-plugins/plugin-sui)
+- AI-based strategy recommendation engine considering:
+  - Current market conditions
+  - Protocol TVL and security history
+  - Historical yields
+  - User's risk profile
+- Secure transaction handling for executing multi-step DeFi strategies
+- Functional Agent on Sui using Eliza OS, supporting natural language DeFi strategy prompts
+- Strategy Engine with risk classification and personalized multi-protocol recommendations
 
-Follow these steps:
+## 👨‍💻 Contact
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Feel free to reach out to me with any questions or feedback:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8caea8e8-52f7-45be-b056-02453c34d455) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- Twitter: [@imchiragkumar](https://twitter.com/imchiragkumar)
+- GitHub: [@ichiragkumar](https://github.com/ichiragkumar)
+- LinkedIn: [https://linkedin.com/in/ichiragkumar](https://linkedin.com/in/ichiragkumar)
+- Instagram: [@ichiragkumar](https://instagram.com/ichiragkumar)

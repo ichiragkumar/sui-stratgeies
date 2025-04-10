@@ -341,7 +341,8 @@ const LiveStrategiesPage: React.FC<LiveStrategiesPageProps> = ({ walletData, onW
                               riskScore: strategy.risk === "Low" ? 3 : strategy.risk === "Moderate" ? 5 : 8,
                               liquidityRisk: strategy.risk.toLowerCase() === 'low' ? 'low' : strategy.risk.toLowerCase() === 'moderate' ? 'medium' : 'high',
                               impermanentLossRisk: strategy.protocol.type === "liquidity" ? "medium" : "low",
-                              explanation: `${strategy.name}: ${strategy.bestFor}.`
+                              explanation: `${strategy.name}: ${strategy.bestFor}.`,
+                              allocationPercentage: 100
                             }} 
                             investmentAmount={strategy.initialInvestment}
                           />
