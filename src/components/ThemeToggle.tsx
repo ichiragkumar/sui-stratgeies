@@ -22,13 +22,13 @@ const ThemeToggle: React.FC = () => {
       variant="ghost"
       size="sm"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="w-9 px-0"
+      className="w-9 px-0 transition-colors duration-300"
       aria-label="Toggle theme"
     >
       {theme === 'dark' ? (
-        <Sun className="h-5 w-5" />
+        <Sun className="h-5 w-5 transition-transform duration-300 ease-in-out" />
       ) : (
-        <Moon className="h-5 w-5" />
+        <Moon className="h-5 w-5 transition-transform duration-300 ease-in-out" />
       )}
     </Button>
   );
