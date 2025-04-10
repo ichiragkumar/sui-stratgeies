@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import { WalletData } from '@/components/WalletConnect';
@@ -9,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, TrendingDown, Star, Filter, ArrowUpDown, Check, X } from 'lucide-react';
 import SocialShare from '@/components/SocialShare';
+import { Protocol } from '@/data/protocols';
 
 // Mock data for live strategies
 const liveStrategies = [
@@ -16,9 +16,16 @@ const liveStrategies = [
     id: 1,
     name: "Low-Risk SUI Staking",
     protocol: {
+      id: 'scallop-staking',
       name: "Scallop Protocol",
       logo: "🔷",
-      type: "staking"
+      type: "staking",
+      riskLevel: 'low' as const,
+      apy: 8.2,
+      tvl: 10000000,
+      description: "Safe staking solution for SUI tokens",
+      audited: true,
+      tokenSymbol: "SUI"
     },
     initialInvestment: 500,
     currentValue: 527.5,
@@ -36,9 +43,16 @@ const liveStrategies = [
     id: 2,
     name: "Moderate Yield Farming",
     protocol: {
+      id: 'cetus-amm',
       name: "Cetus AMM",
       logo: "🌊",
-      type: "liquidity"
+      type: "liquidity",
+      riskLevel: 'moderate' as const,
+      apy: 18.5,
+      tvl: 7500000,
+      description: "Liquidity provision for SUI pairs",
+      audited: true,
+      tokenSymbol: "SUI-USDC LP"
     },
     initialInvestment: 1000,
     currentValue: 1124,
@@ -56,9 +70,16 @@ const liveStrategies = [
     id: 3,
     name: "Aggressive Leverage Strategy",
     protocol: {
+      id: 'turbos-finance',
       name: "Turbos Finance",
       logo: "🚀",
-      type: "leverage"
+      type: "leverage",
+      riskLevel: 'high' as const,
+      apy: 45.3,
+      tvl: 3500000,
+      description: "Leveraged yield strategies",
+      audited: false,
+      tokenSymbol: "TURBOS"
     },
     initialInvestment: 750,
     currentValue: 937.5,
@@ -76,9 +97,16 @@ const liveStrategies = [
     id: 4,
     name: "Conservative SUI-USDC LP",
     protocol: {
+      id: 'navi-finance',
       name: "NAVI Finance",
       logo: "🛳️",
-      type: "liquidity"
+      type: "liquidity",
+      riskLevel: 'low' as const,
+      apy: 6.1,
+      tvl: 12000000,
+      description: "Stable liquidity pools with low risk",
+      audited: true,
+      tokenSymbol: "SUI-USDC LP"
     },
     initialInvestment: 2000,
     currentValue: 2060,
@@ -96,9 +124,16 @@ const liveStrategies = [
     id: 5,
     name: "High Yield Flash Loans",
     protocol: {
+      id: 'flowx-finance',
       name: "FlowX Finance",
       logo: "💧",
-      type: "defi"
+      type: "defi",
+      riskLevel: 'high' as const,
+      apy: -12.1,
+      tvl: 2200000,
+      description: "Flash loan strategies for DeFi experts",
+      audited: false,
+      tokenSymbol: "FLOWX"
     },
     initialInvestment: 3000,
     currentValue: 2850,
@@ -304,7 +339,7 @@ const LiveStrategiesPage: React.FC<LiveStrategiesPageProps> = ({ walletData, onW
                               estimatedReturn: strategy.initialInvestment * (strategy.roi / 100),
                               estimatedApy: strategy.apy,
                               riskScore: strategy.risk === "Low" ? 3 : strategy.risk === "Moderate" ? 5 : 8,
-                              liquidityRisk: strategy.risk.toLowerCase(),
+                              liquidityRisk: strategy.risk.toLowerCase() === 'low' ? 'low' : strategy.risk.toLowerCase() === 'moderate' ? 'medium' : 'high',
                               impermanentLossRisk: strategy.protocol.type === "liquidity" ? "medium" : "low",
                               explanation: `${strategy.name}: ${strategy.bestFor}.`
                             }} 
